@@ -1,65 +1,62 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>今日运势签</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>My Fortune App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #calendar {
+            margin: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #fortuneTube {
+            margin: 20px;
+            perspective: 1000px;
+        }
+        .stick {
+            width: 10px;
+            height: 50px;
+            background: linear-gradient(to top, #4caf50, #f5e13e);
+            margin: 5px;
+            display: inline-block;
+            border-radius: 5px;
+            animation: spin 3s infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotateY(0); }
+            100% { transform: rotateY(360deg); }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="title">今日运势签</h1>
-        
-        <!-- 日历和时间区块 -->
-        <div class="calendar-card">
-            <div class="calendar-content">
-                <div class="date-display">
-                    <div class="gregorian-date">
-                        <span id="gregorianDate"></span>
-                    </div>
-                    <div class="lunar-date">
-                        <span id="lunarDate"></span>
-                    </div>
-                </div>
-                <div class="time-display">
-                    <span id="currentTime"></span>
-                </div>
-            </div>
-        </div>
-
-        <!-- 抽签互动区块 -->
-        <div class="fortune-card">
-            <!-- 签筒和签条显示 -->
-            <div id="stickContainer" class="stick-container">
-                <div class="stick-tube-wrapper">
-                    <div class="stick-tube">
-                        <!-- 签条 -->
-                        <div class="sticks-inside">
-                            <div class="stick-item stick-1"></div>
-                            <div class="stick-item stick-2"></div>
-                            <div class="stick-item stick-3"></div>
-                            <div class="stick-item stick-4"></div>
-                            <div class="stick-item stick-5"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="stick-hint">点击签筒抽签</div>
-            </div>
-
-            <!-- 签文显示 -->
-            <div class="fortune-content" id="fortuneContent" style="display: none;">
-                <div class="fortune-text" id="fortuneText"></div>
-                <div class="fortune-level" id="fortuneLevel"></div>
-            </div>
-        </div>
-
-        <!-- 重新抽签按钮 -->
-        <button class="button" id="drawButton" style="display: none;">
-            <span id="buttonText">重新抽签</span>
-        </button>
+    <h1>Welcome to My Fortune App</h1>
+    <div id="calendar">
+        <h2>Current Date and Time in Beijing</h2>
+        <p id="current-time"></p>
+        <script>
+            function updateTime() {
+                const options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZone: 'Asia/Shanghai' };
+                document.getElementById('current-time').textContent = new Date().toLocaleString('en-US', options);
+            }
+            setInterval(updateTime, 1000);
+            updateTime();
+        </script>
     </div>
-
-    <script src="js/lunar.js"></script>
-    <script src="js/app.js"></script>
+    <div id="fortuneTube">
+        <h2>Interactive 3D Fortune Stick Tube</h2>
+        <div id="sticks" style="display: flex; justify-content: center;">
+            <div class="stick"></div>
+            <div class="stick"></div>
+            <div class="stick"></div>
+            <div class="stick"></div>
+            <div class="stick"></div>
+        </div>
+    </div>
 </body>
 </html>
