@@ -22,7 +22,7 @@ const fortuneData = [
     { text: "山重水复疑无路，柳暗花明又一村", level: "末吉" },
     { text: "时来运转，厚积方能薄发", level: "末吉" },
     { text: "乌云之后见晴天，坚持就是胜利", level: "末吉" },
-    { text: "困难面前莫退缩，��明前的黑暗终会过去", level: "末吉" },
+    { text: "困难面前莫退缩，曙明前的黑暗终会过去", level: "末吉" },
     
     { text: "运势低迷，谨言慎行为上策", level: "凶" },
     { text: "诸事不宜，宜静不宜动", level: "凶" },
@@ -40,6 +40,30 @@ const levelColorMap = {
     "凶": "level-xiong"
 };
 
+// 更新日期和时间
+function updateDateTime() {
+    const now = new Date();
+    
+    // 公历日期
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    const gregorianStr = now.toLocaleDateString('zh-CN', options);
+    document.getElementById('gregorianDate').textContent = gregorianStr;
+    
+    // 农历日期
+    const lunarStr = getLunarDate(now);
+    document.getElementById('lunarDate').textContent = lunarStr;
+    
+    // 实时时间（北京时间）
+    const beijingTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }));
+    const hours = String(beijingTime.getHours()).padStart(2, '0');
+    const minutes = String(beijingTime.getMinutes()).padStart(2, '0');
+    document.getElementById('currentTime').textContent = `${hours}:${minutes}`;
+}
+
+// 初始化并定时更新
+setInterval(updateDateTime, 1000);
+updateDateTime();
+
 // 获取随机运势
 function getRandomFortune() {
     return fortuneData[Math.floor(Math.random() * fortuneData.length)];
@@ -48,7 +72,9 @@ function getRandomFortune() {
 // 创建粒子特效
 function createParticles(event) {
     const particleCount = 30;
-    const button = event.target.closest('.button');
+    let button = document.getElementById('drawButton');
+    if (!button) return;
+    
     const rect = button.getBoundingClientRect();
     
     for (let i = 0; i < particleCount; i++) {
@@ -85,41 +111,50 @@ function createParticles(event) {
 
 // 抽签函数
 async function drawFortune() {
-    const button = document.getElementById('drawButton');
-    const buttonText = document.getElementById('buttonText');
+    const stickContainer = document.getElementById('stickContainer');
     const fortuneContent = document.getElementById('fortuneContent');
+    const drawButton = document.getElementById('drawButton');
+    const stickTube = document.querySelector('.stick-tube');
     
-    // 禁用按钮
-    button.disabled = true;
-    buttonText.innerHTML = '<div class="loading"></div>';
+    // 隐藏重新抽签按钮，显示签筒
+    drawButton.style.display = 'none';
+    stickContainer.style.display = 'block';
+    fortuneContent.style.display = 'none';
     
-    // 显示加载动画
-    fortuneContent.style.opacity = '0.5';
+    // 开始摇晃动画
+    stickTube.classList.remove('shaking');
+    void stickTube.offsetWidth; // 强制重排，重新触发动画
+    stickTube.classList.add('shaking');
     
-    // 模拟网络延迟
-    await new Promise(resolve => setTimeout(resolve, 600));
+    // 等待摇晃结束
+    await new Promise(resolve => setTimeout(resolve, 1200));
     
     // 获取随机运势
     const fortune = getRandomFortune();
     
-    // 更新内容
-    fortuneContent.innerHTML = `
-        <div class="fortune-text">"${fortune.text}"</div>
-        <div class="fortune-level ${levelColorMap[fortune.level]}">${fortune.level}</div>
-    `;
-    fortuneContent.style.opacity = '1';
+    // 隐藏签筒，显示签文
+    stickContainer.style.display = 'none';
+    fortuneContent.style.display = 'flex';
     
-    // 重新启用按钮
-    button.disabled = false;
-    buttonText.textContent = '抽一签';
+    document.getElementById('fortuneText').textContent = `"${fortune.text}"`;
+    const levelElement = document.getElementById('fortuneLevel');
+    levelElement.textContent = fortune.level;
+    levelElement.className = 'fortune-level ' + levelColorMap[fortune.level];
+    
+    // 显示重新抽签按钮
+    drawButton.style.display = 'inline-block';
     
     // 创建粒子特效
-    const event = new Event('click');
-    event.target = button;
-    createParticles(event);
+    createParticles({});
 }
 
-// 页面加载时显示一个初始运势
-window.addEventListener('load', () => {
-    drawFortune();
+// 签筒点击事件
+document.addEventListener('DOMContentLoaded', function() {
+    const stickContainer = document.getElementById('stickContainer');
+    if (stickContainer) {
+        stickContainer.addEventListener('click', drawFortune);
+    }
+    
+    // 初始页面显示签筒
+    updateDateTime();
 });
