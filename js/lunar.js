@@ -33,7 +33,6 @@ function getLunarMonthDaysCount(lunarYear, lunarMonth) {
 
 function solarToLunar(year, month, day) {
     let lunarYear, lunarMonth, lunarDay;
-    let isLeap = false;
     let daysCount = 0;
 
     let startYear = 1900;
@@ -44,7 +43,7 @@ function solarToLunar(year, month, day) {
     for (let i = 1; i < month; i++) {
         if (i === 2) {
             daysCount += isLeapYear(year) ? 29 : 28;
-        } else if (i in [4, 6, 9, 11]) {
+        } else if ([4, 6, 9, 11].includes(i)) {
             daysCount += 30;
         } else {
             daysCount += 31;
@@ -52,9 +51,8 @@ function solarToLunar(year, month, day) {
     }
     daysCount += day;
 
-    // 计算农历
     lunarYear = 1900;
-    daysCount -= 29; // 1900.01.31
+    daysCount -= 29;
     while (true) {
         const yearDays = 383 + (getLeapMonth(lunarYear) ? 1 : 0);
         if (daysCount < yearDays) break;
@@ -72,12 +70,7 @@ function solarToLunar(year, month, day) {
     }
 
     lunarDay = daysCount;
-    if (lunarMonth > 12) {
-        isLeap = true;
-        lunarMonth -= 12;
-    }
-
-    return { year: lunarYear, month: lunarMonth, day: lunarDay, isLeap };
+    return { year: lunarYear, month: lunarMonth, day: lunarDay };
 }
 
 function getLunarDate(date = new Date()) {
@@ -91,7 +84,7 @@ function getLunarDate(date = new Date()) {
 
     const stem = heavenlyStems[heavenlyIndex];
     const branch = earthlyBranches[earthlyIndex];
-    const lunarMonthStr = lunar.isLeap ? '闰' + lunarMonths[lunar.month - 1] : lunarMonths[lunar.month - 1];
+    const lunarMonthStr = lunarMonths[lunar.month - 1];
     const lunarDayStr = lunarDays[lunar.day - 1];
 
     return `${stem}${branch}年 ${lunarMonthStr}月${lunarDayStr}`;
