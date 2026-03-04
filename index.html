@@ -10,17 +10,56 @@
     <div class="container">
         <h1 class="title">今日运势签</h1>
         
-        <div class="card">
-            <div class="fortune-content" id="fortuneContent">
-                <div class="fortune-text">点击下方按钮开始抽签</div>
+        <!-- 日历和时间区块 -->
+        <div class="calendar-card">
+            <div class="calendar-content">
+                <div class="date-display">
+                    <div class="gregorian-date">
+                        <span id="gregorianDate"></span>
+                    </div>
+                    <div class="lunar-date">
+                        <span id="lunarDate"></span>
+                    </div>
+                </div>
+                <div class="time-display">
+                    <span id="currentTime"></span>
+                </div>
             </div>
         </div>
 
-        <button class="button" id="drawButton" onclick="drawFortune()">
-            <span id="buttonText">抽一签</span>
+        <!-- 抽签互动区块 -->
+        <div class="fortune-card">
+            <!-- 签筒和签条显示 -->
+            <div id="stickContainer" class="stick-container">
+                <div class="stick-tube-wrapper">
+                    <div class="stick-tube">
+                        <!-- 签条 -->
+                        <div class="sticks-inside">
+                            <div class="stick-item stick-1"></div>
+                            <div class="stick-item stick-2"></div>
+                            <div class="stick-item stick-3"></div>
+                            <div class="stick-item stick-4"></div>
+                            <div class="stick-item stick-5"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="stick-hint">点击签筒抽签</div>
+            </div>
+
+            <!-- 签文显示 -->
+            <div class="fortune-content" id="fortuneContent" style="display: none;">
+                <div class="fortune-text" id="fortuneText"></div>
+                <div class="fortune-level" id="fortuneLevel"></div>
+            </div>
+        </div>
+
+        <!-- 重新抽签按钮 -->
+        <button class="button" id="drawButton" style="display: none;">
+            <span id="buttonText">重新抽签</span>
         </button>
     </div>
 
+    <script src="js/lunar.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
